@@ -1,17 +1,11 @@
 package com.geanpierre.saborandino.ui.theme.login
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
@@ -19,9 +13,12 @@ fun LoginScreen(navController: NavController) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var error by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
 
@@ -31,18 +28,28 @@ fun LoginScreen(navController: NavController) {
             label = { Text("Correo") }
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         TextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Contraseña") }
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         Button(onClick = {
-            if (email.isNotEmpty() && password.isNotEmpty()) {
+            if (email.isEmpty() || password.isEmpty()) {
+                error = "Completa todos los campos"
+            } else {
                 navController.navigate("home")
             }
         }) {
             Text("Ingresar")
+        }
+
+        if (error.isNotEmpty()) {
+            Text(error, color = Color.Red)
         }
     }
 }
